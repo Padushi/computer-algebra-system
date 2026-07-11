@@ -135,7 +135,8 @@ class Lexer:
         if self._isFinished():
             return "\0"
         else:
-            return self._user_input[self._current_index]
+            # We can just look at _current_index because _advance() already pushes it by 1. 
+            return self._user_input[self._current_index] 
 
     def _nextPeek(self):
         """Read the character after the next character without advancing the index."""
@@ -156,7 +157,7 @@ class Lexer:
 
 
 if __name__ == "__main__":
-    user_input = "flare1 = limit(x^5 + sin(35.2) + 9.0, INFINITY)"
+    user_input = "func(x) = 9x^2 + sqrt( 1 - (cos(x/2))^2 ) - 1.343 + PI"
     lexer = Lexer(user_input)
     tokens = lexer.scanTokens()
     print(tokens)
