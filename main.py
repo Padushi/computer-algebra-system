@@ -2,7 +2,7 @@ import cmd
 
 class ComputerAlegbraSystem(cmd.Cmd):
     
-    intro = "Computer Algebra REPL in Python."
+    intro = "Computer Algebra System in Python."
     prompt = "> "
 
     def default(self, line):
