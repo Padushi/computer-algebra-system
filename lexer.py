@@ -1,6 +1,7 @@
 from enum import Enum, auto
 from exceptions import LexerException
 
+
 class TokenType(Enum):
     """A collection of the different types of tokens."""
 
@@ -33,9 +34,8 @@ class Token:
     def __init__(self, type: TokenType, text: str, value: object):
         self.type = type
         self.text = text
-        self.value = value  
+        self.value = value
 
-    
     def __repr__(self):
         if self.type in [TokenType.IDENTIFIER, TokenType.NUMBER]:
             return f"({self.type.name}: {self.text})"
@@ -49,7 +49,7 @@ class Lexer:
     _keywords = {
         "INFINITY": TokenType.INFINITY,
         "PI": TokenType.PI,
-        "EULER": TokenType.EULER
+        "EULER": TokenType.EULER,
     }
 
     def __init__(self, user_input):
@@ -69,7 +69,6 @@ class Lexer:
             self._start_of_lexeme = self._current_index
             self._scanToken()
         return self._tokens
-    
 
     def _scanToken(self):
         """Scan for an individual token."""
@@ -101,16 +100,14 @@ class Lexer:
             pass
         else:
             column = self._current_index + 1
-            raise LexerException(f"Unrecognized character at column {column}: \"{char}\".")          
+            raise LexerException(f'Unrecognized character at column {column}: "{char}".')
 
-        
     def _getText(self):
         """Get text-based tokens, namely, identifiers and keywords."""
         while self._peek().isalnum():
             self._advance()
-            
 
-        text = self._user_input[self._start_of_lexeme:self._current_index]
+        text = self._user_input[self._start_of_lexeme : self._current_index]
 
         # Decide if text is a keyword or an identifier
         if text in self._keywords.keys():
@@ -119,22 +116,19 @@ class Lexer:
         else:
             self._addToken(TokenType.IDENTIFIER, text)
 
-    
     def _getNumber(self):
         """Get number tokens."""
         while self._peek().isdigit() or (self._peek() == "." and self._nextPeek().isdigit()):
             self._advance()
 
-        number = float(self._user_input[self._start_of_lexeme:self._current_index])
+        number = float(self._user_input[self._start_of_lexeme : self._current_index])
         self._addToken(TokenType.NUMBER, number)
 
-    
     def _advance(self):
         """Read the current character, then advance the index."""
         char = self._user_input[self._current_index]
-        self._current_index += 1 
+        self._current_index += 1
         return char
-
 
     def _peek(self):
         """Read the next character from user input without advancing the index."""
@@ -142,26 +136,24 @@ class Lexer:
             return "\0"
         else:
             return self._user_input[self._current_index]
-        
+
     def _nextPeek(self):
         """Read the character after the next character without advancing the index."""
         if self._current_index + 1 >= len(self._user_input):
             return "\0"
         else:
             return self._user_input[self._current_index + 1]
-        
 
-    def _addToken(self, type: TokenType, value: object=None):
+    def _addToken(self, type: TokenType, value: object = None):
         """Add a token to the list of stored tokens."""
-        text = self._user_input[self._start_of_lexeme:self._current_index]
+        text = self._user_input[self._start_of_lexeme : self._current_index]
         token = Token(type, text, value)
         self._tokens.append(token)
-
 
     def _isFinished(self):
         """Check if lexing is complete."""
         return self._current_index >= len(self._user_input)
-    
+
 
 if __name__ == "__main__":
     user_input = "flare1 = limit(x^5 + sin(35.2) + 9.0, INFINITY)"
