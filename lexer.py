@@ -49,9 +49,10 @@ class Lexer:
     """A scanner that tokenizes user input."""
 
     _keywords = {
-        "INFINITY": TokenType.INFINITY,
+        "let": TokenType.LET,
+        "infinity": TokenType.INFINITY,
         "PI": TokenType.PI,
-        "EULER": TokenType.EULER,
+        "EULER": TokenType.EULER        
     }
 
     def __init__(self, user_input):
@@ -103,7 +104,7 @@ class Lexer:
                 self._addToken(TokenType.COLON_EQUALS)
 
         # Multi character tokens
-        elif char.isalpha():
+        elif char.isalpha() or char == "_":
             self._getText()
         elif char.isdigit():
             self._getNumber()
@@ -119,7 +120,7 @@ class Lexer:
 
     def _getText(self) -> None:
         """Get text-based tokens, namely, identifiers and keywords."""
-        while self._peek().isalnum():
+        while self._peek().isalnum() or self._peek() == "_":
             self._advance()
 
         text = self._user_input[self._start_of_lexeme : self._current_index]
@@ -172,7 +173,8 @@ class Lexer:
 
 
 if __name__ == "__main__":
-    user_input = "let func(x) := 9x^2 + sqrt( 1 - (cos(x/2))^2 ) - 1.343 + PI"
-    lexer = Lexer(user_input)
+    user_input1 = "let f(x) := 9x^2 + sqrt( 1 - (cos(x/2))^2 )"
+    user_input2 = "let equation_of_interest := ln(PI*x)"
+    lexer = Lexer(user_input2)
     tokens = lexer.scanTokens()
     print(tokens)
