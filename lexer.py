@@ -47,7 +47,18 @@ class Token:
 
 class Lexer:
     """A scanner that tokenizes user input."""
-
+    
+    TOKEN_SYMBOLS = {
+        '(': "L_PAREN",
+        ')': "R_PAREN",
+        ',': "COMMA",
+        '=': "EQUALS",
+        '+': "PLUS",
+        '-': "MINUS",
+        '*': "STAR",
+        '/': "SLASH",
+        '^': "CARAT"
+    }
     _keywords = {
         "let": TokenType.LET,
         "infinity": TokenType.INFINITY,
@@ -78,24 +89,8 @@ class Lexer:
         char = self._advance()
 
         # Single character tokens
-        if char == "(":
-            self._addToken(TokenType.L_PAREN)
-        elif char == ")":
-            self._addToken(TokenType.R_PAREN)
-        elif char == ",":
-            self._addToken(TokenType.COMMA)
-        elif char == "=":
-            self._addToken(TokenType.EQUALS)
-        elif char == "+":
-            self._addToken(TokenType.PLUS)
-        elif char == "-":
-            self._addToken(TokenType.MINUS)
-        elif char == "*":
-            self._addToken(TokenType.STAR)
-        elif char == "/":
-            self._addToken(TokenType.SLASH)
-        elif char == "^":
-            self._addToken(TokenType.CARAT)
+        if char in TOKEN_SYMBOLS:
+            self._addToken(TokenType[TOKEN_SYMBOLS[char]])
 
         # Two character token
         elif char == ":":
