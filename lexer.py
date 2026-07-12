@@ -48,18 +48,19 @@ class Token:
 class Lexer:
     """A scanner that tokenizes user input."""
     
-    TOKEN_SYMBOLS = {
-        '(': "L_PAREN",
-        ')': "R_PAREN",
-        ',': "COMMA",
-        '=': "EQUALS",
-        '+': "PLUS",
-        '-': "MINUS",
-        '*': "STAR",
-        '/': "SLASH",
-        '^': "CARAT"
+    _SIMPLE_TOKENS = {
+        "(": TokenType.L_PAREN,
+        ")": TokenType.R_PAREN,
+        ",": TokenType.COMMA,
+        "=": TokenType.EQUALS,
+        "+": TokenType.PLUS,
+        "-": TokenType.MINUS,
+        "*": TokenType.STAR,
+        "/": TokenType.SLASH,
+        "^": TokenType.CARAT
     }
-    _keywords = {
+
+    _KEYWORDS = {
         "let": TokenType.LET,
         "infinity": TokenType.INFINITY,
         "PI": TokenType.PI,
@@ -88,9 +89,9 @@ class Lexer:
         """Scan for an individual token."""
         char = self._advance()
 
-        # Single character tokens
-        if char in TOKEN_SYMBOLS:
-            self._addToken(TokenType[TOKEN_SYMBOLS[char]])
+        # Single character (or "simple") tokens
+        if char in self._SIMPLE_TOKENS:
+            self._addToken(self._SIMPLE_TOKENS[char])
 
         # Two character token
         elif char == ":":
@@ -111,7 +112,7 @@ class Lexer:
         # Unrecognized token
         else:
             column = self._current_index + 1
-            raise LexerException(f'Unrecognized character at column {column}: "{char}".')
+            raise LexerException(f"Unrecognized character at column {column}: \"{char}\".")
 
     def _getText(self) -> None:
         """Get text-based tokens, namely, identifiers and keywords."""
@@ -121,8 +122,8 @@ class Lexer:
         text = self._user_input[self._start_of_lexeme : self._current_index]
 
         # Decide if text is a keyword or an identifier
-        if text in self._keywords.keys():
-            type = self._keywords[text]
+        if text in self._KEYWORDS:
+            type = self._KEYWORDS[text]
             self._addToken(type)
         else:
             self._addToken(TokenType.IDENTIFIER, text)
